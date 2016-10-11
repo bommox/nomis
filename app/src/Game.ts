@@ -12,7 +12,7 @@ class Game {
         GAME_OVER : "gameOver"
     };
 
-    constructor(values:Array<string>) {
+    constructor(values?:Array<string>) {
         this._values = values || 'red,yellow,blue,green'.split(",");
         this._stream = [];
         this._userInput = [];

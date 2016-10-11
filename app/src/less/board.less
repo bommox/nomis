@@ -1,0 +1,68 @@
+/**
+ * Nomis Board
+ */
+@sim-btn-margin : 5px;
+.board-btn {
+    flex: 1;
+    margin: @sim-btn-margin;
+    border-radius: 2 * @sim-btn-margin;
+}
+
+.board-btn-effects(@bgcolor, @borderColor) {
+    box-shadow: 0 5px 0 darken(@bgcolor,10%);
+    border: 5px solid @borderColor;
+    position: relative;
+    background-color: rgba(red(@bgcolor),green(@bgcolor),blue(@bgcolor),0.2);
+
+    .GameOff & {
+        background-color: @bgcolor;
+    }
+    .GameOnPc & {
+        background-color: transparent;
+    }
+    
+    &.active {
+        background-color: lighten(@bgcolor, 10%);
+        &.pressed {
+            box-shadow: 0 0 0 darken(@bgcolor,10%);
+            top:5px;
+        }
+    }
+
+}
+
+@sim-btn-corner : calc(~"100% - "2*@sim-btn-margin);
+.board-btn-tl {
+    border-top-left-radius: @sim-btn-corner;
+   .board-btn-effects(@color-green-1, @color-green);
+}
+.board-btn-tr {
+    border-top-right-radius: @sim-btn-corner;
+   .board-btn-effects(@color-red-1, @color-red);
+}
+.board-btn-bl {
+    border-bottom-left-radius: @sim-btn-corner;
+   .board-btn-effects(@color-yellow-1, @color-yellow);
+}
+.board-btn-br {
+    border-bottom-right-radius: @sim-btn-corner;
+   .board-btn-effects(@color-blue-1, @color-blue);
+}
+
+
+.board-panel {
+    @size: 280px;
+    width: @size;
+    height: @size;
+    @media (min-width: 600px) {
+        @size: 500px;
+        width: @size;
+        height: @size;
+    }
+    min-height: @size;
+    align-self: center;
+    margin: 15px;
+    z-index: 5;
+    position: relative;
+}
+

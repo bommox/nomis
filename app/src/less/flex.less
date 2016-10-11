@@ -1,0 +1,52 @@
+[class*="flex-row"] { 
+  flex-direction:row;
+  &[class*="--wrap"] {
+    flex-direction:row wrap;   
+  }
+}
+
+[class*="flex-col"] { 
+  flex-direction:column; 
+  &[class*="--wrap"] {
+    flex-direction:column wrap;   
+  }
+}
+
+[class*="flex-col"],[class*="flex-row"] {
+  display:flex !important;
+  align-items: stretch;
+  justify-content: center;
+  &[class*="--j-start"] {
+      justify-content: flex-start;
+  }
+  &[class*="--j-end"] {
+      justify-content: flex-end;
+  }
+  &[class*="--j-around"] {
+      justify-content: space-around;
+  }
+  &[class*="--j-between"] {
+      justify-content:space-between;
+  }
+  &[class*="--a-start"] {
+      align-items: flex-start;
+  }
+  &[class*="--a-end"] {
+      align-items: flex-end;
+  }
+  &[class*="--a-center"] {
+      align-items: center;
+  }
+  &[class*="--a-stretch"] {
+      align-items: stretch;
+  }
+  
+}
+
+.generate-flex-item(12);
+.generate-flex-item(@n, @i: 1) when (@i =< @n) {
+  .flex-@{i} {
+    flex: (@i);
+  }
+  .generate-flex-item(@n, (@i + 1));
+}

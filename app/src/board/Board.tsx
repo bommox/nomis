@@ -3,9 +3,7 @@ import Game from '../Game';
 
 export interface IBoardState {}
 
-export interface IBoardProps {
-    panels:Array<string>
-}
+export interface IBoardProps {}
 
 export class Board extends React.Component<IBoardProps, IBoardState> {
 
@@ -39,7 +37,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     }
 
     start() {
-        var game = new Game(this.props.panels);
+        var game = new Game();
 
       //  game.subscribe(Game.events.USER_CHECK_ROUND_OK, this.onGameCheck);
         game.getStream();
@@ -50,15 +48,19 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
 
     }
 
-    render() {    
-        var panels = this.props.panels;
+    render() { 
         var _this = this;
-        return (            
-            <div>
-                {panels.map(function(p) {
-                    return <div key={p} ref={(i) => _this.btns[p] = i} className="board" onClick={_this.pressPanel.bind(_this, p)}>{p}</div>;
-                })}
-                <button onClick={this.start}>Start!</button>
+        return (
+            <div className="board-panel flex-col">
+                <div className="flex-1 flex-row">
+                    <span key="green" className="board-btn board-btn-tl" data-color="green" onClick={_this.pressPanel.bind(_this, 'green')}></span>
+                    <span key="red" className="board-btn board-btn-tr" data-color="red" onClick={_this.pressPanel.bind(_this, 'red')}></span>
+                </div>
+                <div id="visualizer" className="flex-col--a-center">START</div>
+                <div className="flex-1 flex-row">
+                    <span key="yellow" className="board-btn board-btn-bl" data-color="yellow" onClick={_this.pressPanel.bind(_this, 'yellow')}></span>
+                    <span key="blue" className="board-btn board-btn-br" data-color="blue" onClick={_this.pressPanel.bind(_this, 'blue')}></span>
+                </div>
             </div>
         );
     }
