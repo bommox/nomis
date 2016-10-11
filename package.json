@@ -9,7 +9,7 @@
   "scripts": {
     "start": "http-server",
     "postinstall": "grunt copy:libs",
-    "build" : "browserify app/src/app.tsx -p [ tsify ] -o  app/app-bundle-ts.js",
+    "build" : "browserify --debug app/src/app.tsx -p [ tsify ] -o  app/app-bundle-ts.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

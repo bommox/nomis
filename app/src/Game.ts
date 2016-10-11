@@ -4,7 +4,7 @@ class Game {
     _stream:Array<string>;
     _userInput:Array<string>;
     _gameOver:boolean;
-    _handlers:any;
+    _handlers:Object;
 
     static events = {
         USER_CHECK_STEP_OK : "userCheckOk",

@@ -1,13 +1,13 @@
 {
     "compilerOptions": {
-        "module": "umd",
+        "module": "none",
         "noImplicitAny": false,
         "jsx": "react",
         "typeRoots" : ["./typings"],
         "sourceMap": true
     },
     "include": [
-        "app/**/*",
+        "app/src/**/*",
         "typings/**/*"
     ],
     "exclude": [
