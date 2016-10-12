@@ -1,6 +1,14 @@
 {
   "dependencies": {
     "react": "registry:npm/react#15.0.1+20160601175240",
-    "react-dom": "registry:npm/react-dom#15.0.1+20160826174104"
+    "react-dom": "registry:npm/react-dom#15.0.1+20160826174104",
+    "rxjs-es": "npm:rxjs-es/Rx.d.ts"
+  },
+  "globalDependencies": {
+    "es6-promise": "registry:dt/es6-promise#0.0.0+20160614011821",
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504",
+    "jquery": "registry:dt/jquery#1.10.0+20160929162922",
+    "rx": "registry:dt/rx#0.0.0+20160317120654",
+    "rx.all": "registry:dt/rx.all#2.2.28+20160316155526"
   }
 }

@@ -34,9 +34,11 @@
     "howler": "^2.0.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
+    "rxjs": "^5.0.0-rc.1",
     "rxjs-es": "^5.0.0-beta.12"
   },
   "devDependencies": {
+    "@reactivex/rxjs": "^5.0.0-rc.1",
     "babel-cli": "^6.16.0",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",

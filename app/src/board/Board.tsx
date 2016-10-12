@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Game from '../Game';
 import * as Log from '../common/Log';
-
+import * as $ from 'jquery';
 
 
 export const PANEL_COLOR = {
@@ -65,6 +65,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         super();
         this.log = Log.getLog('Board');
         this.handleUserClick= this.handleUserClick.bind(this);
+        this.playPanel= this.playPanel.bind(this);
         this.gameStart = this.gameStart.bind(this);
         this.gameGetSequence = this.gameGetSequence.bind(this);
         this.btns = {};
@@ -73,17 +74,29 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
             playingSequence : false
         }
     }
+
+    playPanel(btnId:string) {
+        if (pressButton(this.btns[btnId])) {
+            this.log.d("handleUserClick:Button " + btnId + " pressed");
+            GAME_SOUNDS[btnId].play();
+        }
+    }
     
     handleUserClick(btnId:string) {
-        if (pressButton(this.btns[btnId])) {
-            if (btnId == 'center') {
-                this.log.d("handleUserClick:Button center pressed!");
-                if (!this.state.started) {
-                    this.gameStart();
-                }
+        if (btnId == 'center') {
+            pressButton(this.btns[btnId]);
+            this.log.d("handleUserClick:Button center pressed!");
+            if (!this.state.started) {
+                this.gameStart();
             } else {
-                this.log.d("handleUserClick:Button " + btnId + " pressed");
-                GAME_SOUNDS[btnId].play();
+                this.log.w('Game already started');
+            }
+        } else {
+            if (!this.state.playingSequence) {  
+                this.playPanel(btnId);
+                if (this.state.started) {
+                    this.game.checkUserInput(btnId);
+                }
             }
         }
     }
@@ -92,10 +105,24 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         this.log.i("Starting game");
         this.game = new Game([PANEL_COLOR.BLUE,PANEL_COLOR.YELLOW,PANEL_COLOR.RED,PANEL_COLOR.GREEN]);
         this.setState({started : true});
-
-        this.gameGetSequence();
-      //  game.subscribe(Game.events.USER_CHECK_ROUND_OK, this.onGameCheck);
-        
+        if (this.props.onGameStart) {
+            this.props.onGameStart.apply(null);
+        } 
+        this.game.subscribe(Game.events.GAME_OVER, () => {
+            this.setState({started : false});
+            if (this.props.onGameOver) {
+                this.props.onGameOver.apply(null);
+            } 
+        });
+        this.game.subscribe(Game.events.USER_CHECK_ROUND_OK, () => {
+            this.log.i("ROUND Ok.");
+            setTimeout(this.gameGetSequence.bind(this),1000);
+            if (this.props.onTurnOk) {
+                this.props.onTurnOk.apply(null);
+            }
+        });
+        setTimeout(this.gameGetSequence.bind(this),1000);
+        //game.subscribe(Game.events.USER_CHECK_ROUND_OK, this.onGameCheck);        
 
     }
 
@@ -104,8 +131,14 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         this.log.i("Game sequence -> " + sequence);
         this.setState({playingSequence : true});
         
-        sequence.forEach((v,i) => {            
-            this.handleUserClick(v);
+        sequence.forEach((v,i) => {    
+            var isLast = i == sequence.length - 1;          
+            setTimeout((() => {
+                this.playPanel(v);
+                if (isLast) {
+                    this.setState({playingSequence : false});
+                }
+            }).bind(this),400*i);
         });
     }
 
@@ -129,7 +162,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
                 <div className="flex-col--a-center board-center-btn" 
                     ref={c => _this.btns['center'] = c} 
                     onClick={_this.handleUserClick.bind(_this, 'center')}>
-                    START
+                    {this.state.started ? ':)' : 'Start!'}
                 </div>
                 <div className="flex-1 flex-row">
                     {getPanel(PANEL_COLOR.YELLOW, 'bl')}
