@@ -154,7 +154,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
             </span>
         );
         return (
-            <div className="board-panel flex-col">
+            <div className={"board-panel flex-col " + ((this.state.started) ? 'started' : '')}>
                 <div className="flex-1 flex-row">
                     {getPanel(PANEL_COLOR.GREEN, 'tl')}
                     {getPanel(PANEL_COLOR.RED, 'tr')}
