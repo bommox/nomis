@@ -21,13 +21,13 @@
         background-color: transparent;
     }
     
-    &.active {
+    
+    &.pressed {
         background-color: lighten(@bgcolor, 10%);
-        &.pressed {
-            box-shadow: 0 0 0 darken(@bgcolor,10%);
-            top:5px;
-        }
+        box-shadow: 0 0 0 darken(@bgcolor,10%);
+        top:5px;
     }
+
 
 }
 
@@ -66,3 +66,18 @@
     position: relative;
 }
 
+
+.board-center-btn {
+    position: absolute;
+    background-color: white;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    z-index: 1;
+    left: calc(50% - 2.5rem);
+    margin-top: -2.5rem;
+    border-bottom: 5px solid grey;
+    &.pressed {
+        background-color: grey;        
+    }
+}

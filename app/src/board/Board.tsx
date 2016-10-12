@@ -1,65 +1,139 @@
+/// <reference path="../../../typings/index.d.ts" />
+
 import * as React from 'react';
 import Game from '../Game';
+import * as Log from '../common/Log';
 
-export interface IBoardState {}
 
-export interface IBoardProps {}
+
+export const PANEL_COLOR = {
+    GREEN : 'green',
+    RED : 'red',
+    YELLOW : 'yellow',
+    BLUE : 'blue'
+}
+
+////////////////////// Howler Library
+let loadSound = function(name) {
+    if (window && window['Howl']) {
+        Log.logRoot.d("Loading sound " + name);
+        let Howl = window['Howl'];
+        return new Howl({
+            src: ['src/sound/' + name + '.mp3']
+        });
+    } else {
+        Log.logRoot.e("Install howler library");
+    }
+};
+////////////////////// Button behaviour
+let pressButton = function(node) : boolean {
+    if (node && node.className.indexOf("pressed") == -1 ) {
+        var origClass = node.className;
+        node.className = origClass + " pressed";
+        setTimeout(() => node.className = origClass, 200);
+        return true;
+    } else {
+        return false;
+    }
+};
+
+let GAME_SOUNDS = {};
+GAME_SOUNDS[PANEL_COLOR.GREEN] = loadSound("C");
+GAME_SOUNDS[PANEL_COLOR.RED] = loadSound("D");
+GAME_SOUNDS[PANEL_COLOR.YELLOW] = loadSound("E");
+GAME_SOUNDS[PANEL_COLOR.BLUE] = loadSound("F");
+
+export interface IBoardState {
+    started?:boolean,
+    playingSequence?:boolean
+}
+
+export interface IBoardProps {
+    speed?:number,
+    onGameStart?:()=>void,
+    onGameOver?:()=>void,
+    onTurnOk?:()=>void
+}
 
 export class Board extends React.Component<IBoardProps, IBoardState> {
 
     btns;
+    log:Log.ILog;
+    game:Game;
 
     constructor () {
         super();
-        this.pressPanel = this.pressPanel.bind(this);
-        this.onGameCheck = this.onGameCheck.bind(this);
-        this.start = this.start.bind(this);
+        this.log = Log.getLog('Board');
+        this.handleUserClick= this.handleUserClick.bind(this);
+        this.gameStart = this.gameStart.bind(this);
+        this.gameGetSequence = this.gameGetSequence.bind(this);
         this.btns = {};
+        this.state = {
+            started : false,
+            playingSequence : false
+        }
     }
     
-    pressPanel(panelId) {
-
-        var btn = this.btns[panelId];
-        console.log(btn);
-        if (btn && btn.className.indexOf("pressed") == -1 ) {
-            var origClass = btn.className;
-            btn.className = origClass + " pressed";
-            setTimeout(function() {
-                    btn.className = origClass;
-            }, 300);
+    handleUserClick(btnId:string) {
+        if (pressButton(this.btns[btnId])) {
+            if (btnId == 'center') {
+                this.log.d("handleUserClick:Button center pressed!");
+                if (!this.state.started) {
+                    this.gameStart();
+                }
+            } else {
+                this.log.d("handleUserClick:Button " + btnId + " pressed");
+                GAME_SOUNDS[btnId].play();
+            }
         }
     }
 
-    
+    gameStart() {
+        this.log.i("Starting game");
+        this.game = new Game([PANEL_COLOR.BLUE,PANEL_COLOR.YELLOW,PANEL_COLOR.RED,PANEL_COLOR.GREEN]);
+        this.setState({started : true});
 
-    onGameCheck() {
-        console.log("CHEEEEK");
-    }
-
-    start() {
-        var game = new Game();
-
+        this.gameGetSequence();
       //  game.subscribe(Game.events.USER_CHECK_ROUND_OK, this.onGameCheck);
-        game.getStream();
-        game.getStream();
-        game.getStream();
-        var newStream = game.getStream();
-        console.log(newStream);
+        
 
     }
+
+    gameGetSequence() {
+        let sequence = this.game.getStream();
+        this.log.i("Game sequence -> " + sequence);
+        this.setState({playingSequence : true});
+        
+        sequence.forEach((v,i) => {            
+            this.handleUserClick(v);
+        });
+    }
+
 
     render() { 
         var _this = this;
+        var getPanel = (color:string, position:string) => (
+            <span   key={color} 
+                    className={"board-btn board-btn-" + position} 
+                    data-color={color}
+                    ref={(c) => _this.btns[color] = c} 
+                    onClick={_this.handleUserClick.bind(_this, color)}>
+            </span>
+        );
         return (
             <div className="board-panel flex-col">
                 <div className="flex-1 flex-row">
-                    <span key="green" className="board-btn board-btn-tl" data-color="green" onClick={_this.pressPanel.bind(_this, 'green')}></span>
-                    <span key="red" className="board-btn board-btn-tr" data-color="red" onClick={_this.pressPanel.bind(_this, 'red')}></span>
+                    {getPanel(PANEL_COLOR.GREEN, 'tl')}
+                    {getPanel(PANEL_COLOR.RED, 'tr')}
                 </div>
-                <div id="visualizer" className="flex-col--a-center">START</div>
+                <div className="flex-col--a-center board-center-btn" 
+                    ref={c => _this.btns['center'] = c} 
+                    onClick={_this.handleUserClick.bind(_this, 'center')}>
+                    START
+                </div>
                 <div className="flex-1 flex-row">
-                    <span key="yellow" className="board-btn board-btn-bl" data-color="yellow" onClick={_this.pressPanel.bind(_this, 'yellow')}></span>
-                    <span key="blue" className="board-btn board-btn-br" data-color="blue" onClick={_this.pressPanel.bind(_this, 'blue')}></span>
+                    {getPanel(PANEL_COLOR.YELLOW, 'bl')}
+                    {getPanel(PANEL_COLOR.BLUE, 'br')}
                 </div>
             </div>
         );
