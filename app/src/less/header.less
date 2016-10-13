@@ -1,0 +1,115 @@
+@import './colors';
+@import './utils';
+/**
+ * Header
+ */
+.header {
+    .header-container {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    background-color: @color-bg;
+    color: @color-fg;
+    padding: 1rem;
+    text-align: center;
+    font-size: 2rem;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    @afterSize: 120px;
+    //Causa problemas de rendimiento
+    
+    &:after {
+        content: " ";
+        min-height: @afterSize;
+        bottom: calc(-@afterSize~" + 1px");
+        display: block;
+        position:absolute;
+        width: @afterSize;
+        left: calc(~"50% - "@afterSize/2);
+        box-sizing: border-box;
+        border-top: @afterSize/2 solid @color-bg;
+        border-bottom: @afterSize/2 solid transparent;
+        border-left: @afterSize/2 solid transparent;
+        border-right: @afterSize/2 solid transparent;
+        z-index: 1;
+    }
+    .score {
+        position: relative;
+        top: @afterSize/3;
+        z-index: 10;
+        font-family: SmudgeStick;
+        &.newRecord:before {
+                content: "new record";
+                display: block;
+                font-size: 0.8rem;
+                position: absolute;
+                width: 100%;
+                top: -0.7rem;
+                color: red;
+        }
+    }
+    .title {
+        font-size: 3rem;
+        text-transform: uppercase;
+        margin: 0.5rem auto 1rem auto;
+        font-family: SheepingDogs, Verdana, Geneva, Tahoma, sans-serif;
+        .GameOn & {
+            color: @color-disabled;
+        }
+    }
+    .level-selector {
+        font-family: SmudgeStick;
+        &.disabled .level-selector-btn{
+            opacity: 0.2;
+        }
+        .level-text-wrapper {
+            position: relative;
+            .level-text {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                opacity: 0;
+                &.active {
+                    opacity: 1;
+                }
+            }
+        
+        }
+        .GameOn & {
+            color: @color-disabled;
+            button, .no-btn {
+                visibility: hidden;
+            }
+        }
+
+    }
+    @separator-color: #ccc;
+    .separator-big {
+        width: 90%;
+        margin: 0.5rem auto;
+        border-bottom: 1px solid @separator-color;
+        position: relative;
+        &:after {
+            content: "*";
+            position: absolute;
+            width:2rem;
+            left: calc(~"50% - 1rem");
+            top:-1rem/8;
+            display: inline-block;
+            background-color: white;
+            line-height: 1rem;
+            color: @separator-color;
+        }
+    }
+    .separator-small {
+        width: 70%;
+        margin: 0.5rem auto;
+        min-height: 5px;
+        border-top: 1px solid @separator-color;
+        border-bottom: 1px solid @separator-color;
+    }
+}
+

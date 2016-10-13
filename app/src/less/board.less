@@ -12,7 +12,7 @@
     box-shadow: 0 5px 0 darken(@bgcolor,10%);
     border: 5px solid @borderColor;
     position: relative;
-    background-color: rgba(red(@bgcolor),green(@bgcolor),blue(@bgcolor),0.2);
+    background-color: rgba(red(@bgcolor),green(@bgcolor),blue(@bgcolor),0.5);
 
     .GameOff & {
         background-color: @bgcolor;
@@ -20,9 +20,13 @@
     .GameOnPc & {
         background-color: transparent;
     }
+
+    .board-panel.playing & {
+        background-color: rgba(red(@bgcolor),green(@bgcolor),blue(@bgcolor),0.2);
+    }
     
     
-    &.pressed {
+    &.pressed, .board-panel.playing &.pressed {
         background-color: lighten(@bgcolor, 10%);
         box-shadow: 0 0 0 darken(@bgcolor,10%);
         top:5px;
@@ -52,6 +56,7 @@
 
 .board-panel {
     @size: 280px;
+    margin: 0 auto !important;
     width: @size;
     height: @size;
     @media (min-width: 600px) {
@@ -74,7 +79,7 @@
     width: 5rem;
     border-radius: 50%;
     z-index: 1;
-    left: calc(50% - 2.5rem);
+    left: calc(~"50% - 2.5rem");
     margin-top: -2.5rem;
     border-bottom: 5px solid grey;
     &.pressed {

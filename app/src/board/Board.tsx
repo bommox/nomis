@@ -30,9 +30,10 @@ let pressButton = function(node) : boolean {
     if (node && node.className.indexOf("pressed") == -1 ) {
         var origClass = node.className;
         node.className = origClass + " pressed";
-        setTimeout(() => node.className = origClass, 200);
+        setTimeout(() => node.className = origClass, 150);
         return true;
     } else {
+        Log.logRoot.w('Button already pressed');
         return false;
     }
 };
@@ -49,7 +50,7 @@ export interface IBoardState {
 }
 
 export interface IBoardProps {
-    speed?:number,
+    speed:number,
     onGameStart?:()=>void,
     onGameOver?:()=>void,
     onTurnOk?:()=>void
@@ -61,7 +62,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     log:Log.ILog;
     game:Game;
 
-    constructor () {
+    constructor() {
         super();
         this.log = Log.getLog('Board');
         this.handleUserClick= this.handleUserClick.bind(this);
@@ -110,36 +111,38 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         } 
         this.game.subscribe(Game.events.GAME_OVER, () => {
             this.setState({started : false});
+            $.each(PANEL_COLOR, (_,v) => this.playPanel(v));
             if (this.props.onGameOver) {
                 this.props.onGameOver.apply(null);
             } 
         });
         this.game.subscribe(Game.events.USER_CHECK_ROUND_OK, () => {
             this.log.i("ROUND Ok.");
-            setTimeout(this.gameGetSequence.bind(this),1000);
+            this.gameGetSequence();
             if (this.props.onTurnOk) {
                 this.props.onTurnOk.apply(null);
             }
         });
-        setTimeout(this.gameGetSequence.bind(this),1000);
+        this.gameGetSequence();
         //game.subscribe(Game.events.USER_CHECK_ROUND_OK, this.onGameCheck);        
 
     }
 
     gameGetSequence() {
         let sequence = this.game.getStream();
-        this.log.i("Game sequence -> " + sequence);
+        this.log.i("Game sequence. Speed:" + this.props.speed + " -> " + sequence);
         this.setState({playingSequence : true});
-        
-        sequence.forEach((v,i) => {    
-            var isLast = i == sequence.length - 1;          
-            setTimeout((() => {
-                this.playPanel(v);
-                if (isLast) {
-                    this.setState({playingSequence : false});
-                }
-            }).bind(this),400*i);
-        });
+        setTimeout((() => {
+            sequence.forEach((v,i) => {    
+                var isLast = i == sequence.length - 1;          
+                setTimeout((() => {
+                    this.playPanel(v);
+                    if (isLast) {
+                        setTimeout((() => this.setState({playingSequence : false})).bind(this), 500);
+                    }
+                }).bind(this),this.props.speed*i);
+            });
+        }).bind(this), 800);
     }
 
 
@@ -154,7 +157,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
             </span>
         );
         return (
-            <div className={"board-panel flex-col " + ((this.state.started) ? 'started' : '')}>
+            <div className={"board-panel flex-col " + ((this.state.started) ? ' started ' : ' ') + ((this.state.playingSequence) ? ' playing ' : ' ')}>
                 <div className="flex-1 flex-row">
                     {getPanel(PANEL_COLOR.GREEN, 'tl')}
                     {getPanel(PANEL_COLOR.RED, 'tr')}
