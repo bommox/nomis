@@ -24,10 +24,19 @@ interface UserLevelData {
     }
 }
 
+const getSpeedFunction = function(to:number, tf:number, nf: number):(number)=>number {
+  let a = (to - tf)/(nf*nf);
+  let b = -2*(to - tf)/nf;
+  let c=to;
+  return function(n:number) {
+    return (n > nf) ? tf : a*n*n+b*n+c;
+  }
+}
+
 const LEVELS:LevelData[] = [
-  {id:'easy', label: 'easy', speed:(n) => 600 - n*10},
-  {id:'medium', label: 'medium', speed:(n) => 400 - n*10},
-  {id:'hard', label: 'hard', speed:(n) => 200 - n*10}
+  {id:'easy', label: 'easy', speed:getSpeedFunction(600,300,30)},
+  {id:'medium', label: 'medium', speed:getSpeedFunction(450,200,30)},
+  {id:'hard', label: 'hard', speed:getSpeedFunction(300,200,30)}
 ];
 
 

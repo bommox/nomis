@@ -69,7 +69,7 @@ export class LevelSelector extends React.Component<ILevelSelectorProps, ILevelSe
                 <span className="no-btn level-selector-btn" onClick={this.handlePrevBtnClick}>&lt;</span>
                 <div className="flex-1 level-text-wrapper">
                     {this.props.levelLabels.map((v,i) => 
-                        <span key={i} className={"level-text " + ((this.state.levelIdx === i) ? ' active ' : ' ') }>{this.state.levelIdx} -- {v} -- {i}</span>
+                        <span key={i} className={"level-text " + ((this.state.levelIdx === i) ? ' active ' : ' ') }>{v}</span>
                     )}
                 </div>
                 <span className="no-btn  level-selector-btn" onClick={this.handleNextBtnClick}>&gt;</span>
