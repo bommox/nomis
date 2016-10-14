@@ -2,7 +2,6 @@
 
 import {Board}  from './board/Board';
 import {LevelSelector}  from './header/LevelSelector';
-import {Score}  from './header/Score';
 import Game from './Game';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
@@ -59,7 +58,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         super();
         this.log = Log.getLog('App');
         this.handleOnLevelChange = this.handleOnLevelChange.bind(this);
-        this.handleOnNewRecord = this.handleOnNewRecord.bind(this);
         this.handleOnGameStart = this.handleOnGameStart.bind(this);
         this.handleOnGameOver = this.handleOnGameOver.bind(this);
         this.handleOnTurnOk = this.handleOnTurnOk.bind(this);
@@ -82,11 +80,6 @@ export class App extends React.Component<IAppProps, IAppState> {
       this.setState({
         selectedLevel : newValue
       });
-    }
-
-    handleOnNewRecord(record:number) {
-      this.log.i("New record -> " + record);
-      //TODO Save data
     }
 
     handleOnGameStart()  {
@@ -120,6 +113,8 @@ export class App extends React.Component<IAppProps, IAppState> {
         let currentLevel = this.props.levels[this.state.selectedLevel];
         let currentLevelId = currentLevel.id;
         let boardSpeed = currentLevel.speed(this.state.score);
+        let currentLevelRecord = this.state.records[currentLevelId].record;
+        let hasRecord = (this.state.gameStarted && this.state.score > currentLevelRecord);
         return (
            <div className="flex-1 flex-col">
               <div className="header">
@@ -136,7 +131,16 @@ export class App extends React.Component<IAppProps, IAppState> {
                           <div className="separator-small"></div>
                       </div>      
                   </div>
-                  <Score lastRecord={this.state.records[currentLevelId].record} score={this.state.score}/>
+                  <div className={"score " + (hasRecord ? "highlight" : "")}>
+                      <div className="score-label">
+                        {
+                          (hasRecord)                 ? 'new record!'
+                          :(!this.state.gameStarted)  ? 'Record is'
+                                                      : ''
+                        }
+                      </div>
+                      <div className="score-value">{(this.state.gameStarted) ? this.state.score : currentLevelRecord}</div>  
+                  </div>
               </div>
               <div className="flex-2"></div>
               <Board speed={boardSpeed} onGameStart={this.handleOnGameStart} onGameOver={this.handleOnGameOver} onTurnOk={this.handleOnTurnOk} />

@@ -36,18 +36,31 @@
     }
     .score {
         position: relative;
-        top: @afterSize/3;
+        top: @afterSize/6;
+        margin-bottom: -@afterSize/6;
         z-index: 10;
         font-family: SmudgeStick;
-        &.newRecord:before {
-                content: "new record";
-                display: block;
-                font-size: 0.8rem;
-                position: absolute;
-                width: 100%;
-                top: -0.7rem;
+        color: black;
+        &.highlight {
+            .score-label {
                 color: red;
+            }
         }
+       
+       .score-value {
+
+       }
+
+       .score-label {
+            content: "new record";
+            display: block;
+            font-size: 0.8rem;
+            position: absolute;
+            width: 100%;
+            top: -0.7rem;
+       }
+        
+        
     }
     .title {
         font-size: 3rem;

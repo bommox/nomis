@@ -162,11 +162,13 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
                     {getPanel(PANEL_COLOR.GREEN, 'tl')}
                     {getPanel(PANEL_COLOR.RED, 'tr')}
                 </div>
-                <div className="flex-col--a-center board-center-btn" 
-                    ref={c => _this.btns['center'] = c} 
-                    onClick={_this.handleUserClick.bind(_this, 'center')}>
-                    {this.state.started ? ':)' : 'Start!'}
-                </div>
+                {   (!this.state.started)
+                        ?  <div className="flex-col--a-center board-center-btn" 
+                            ref={c => _this.btns['center'] = c} 
+                            onClick={_this.handleUserClick.bind(_this, 'center')}>Start</div>
+                        : ''
+                }
+                
                 <div className="flex-1 flex-row">
                     {getPanel(PANEL_COLOR.YELLOW, 'bl')}
                     {getPanel(PANEL_COLOR.BLUE, 'br')}
