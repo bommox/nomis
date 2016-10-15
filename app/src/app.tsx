@@ -6,6 +6,7 @@ import Game from './Game';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import * as Log from './common/Log';
+import * as Storage from './common/Storage';
 
 let log = Log.getLog('AppMain');
 
@@ -50,6 +51,8 @@ export interface IAppProps {
   levels:LevelData[]
 }
 
+const USER_DATA_RECORDS = 'UserDataRecords';
+
 export class App extends React.Component<IAppProps, IAppState> {
 
     log:Log.ILog;
@@ -61,14 +64,18 @@ export class App extends React.Component<IAppProps, IAppState> {
         this.handleOnGameStart = this.handleOnGameStart.bind(this);
         this.handleOnGameOver = this.handleOnGameOver.bind(this);
         this.handleOnTurnOk = this.handleOnTurnOk.bind(this);
+        this.saveData = this.saveData.bind(this);
+
+        let userRecords = Storage.get(USER_DATA_RECORDS, {
+            'easy' : {record:0},
+            'medium' : {record:0},
+            'hard' : {record:0}
+        });
+
         this.state = {
           //TODO - Recuperar de localStorage
           selectedLevel : 0,
-          records : {
-            'easy' : {record:15},
-            'medium' : {record:10},
-            'hard' : {record:0}
-          },
+          records : userRecords,
           score: 0,
           gameStarted: false
         }
@@ -94,17 +101,34 @@ export class App extends React.Component<IAppProps, IAppState> {
       this.log.d("handleOnGameOver");
       let currentLevelId = this.props.levels[this.state.selectedLevel].id;
       let levelRecord = this.state.records[currentLevelId].record;
-      this.setState({
-        score: levelRecord,
-        gameStarted : false
-      });
+      if (this.state.score > levelRecord) {
+        this.log.d("New record");
+        let userRecords = this.state.records;
+        userRecords[currentLevelId] = {'record' : this.state.score}; 
+        this.setState({
+          records : userRecords,
+          score: levelRecord,
+          gameStarted: false
+        }, this.saveData.bind(this));
+      } else {
+          this.setState({
+            score: levelRecord,
+            gameStarted : false
+          });
+      }
     }
 
     handleOnTurnOk() {
       this.log.d("handleOnTurnOk");
+      let newScore = this.state.score + 1;
       this.setState({
-        score : this.state.score + 1
-      })
+        score : newScore
+      });
+    }
+
+    saveData() {
+      this.log.i("Saving data...");
+      Storage.put(USER_DATA_RECORDS, this.state.records);
     }
 
     render() {
