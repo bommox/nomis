@@ -34,9 +34,9 @@ const getSpeedFunction = function(to:number, tf:number, nf: number):(number)=>nu
 }
 
 const LEVELS:LevelData[] = [
-  {id:'easy', label: 'easy', speed:getSpeedFunction(600,300,30)},
-  {id:'medium', label: 'medium', speed:getSpeedFunction(450,200,30)},
-  {id:'hard', label: 'hard', speed:getSpeedFunction(300,200,30)}
+  {id:'easy', label: 'easy', speed:getSpeedFunction(600,300,15)},
+  {id:'medium', label: 'medium', speed:getSpeedFunction(300,200,15)},
+  {id:'hard', label: 'hard', speed:getSpeedFunction(250,100,20)}
 ];
 
 

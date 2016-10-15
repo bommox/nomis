@@ -8,6 +8,24 @@ export interface ILog {
     e:(string)=>void
 }
 
+let globalLogLevel = 'warning';
+
+export let setLogLevel = function(level:string):void {
+    globalLogLevel = level;
+}
+
+let doLog = function(level:string):boolean {
+    let result = true;
+    if (globalLogLevel == 'info' && level == 'debug') {
+        result = false;
+    } else if (globalLogLevel == 'warning' && (level == 'debug' || level == 'info')) {
+        result = false;
+    } else if (globalLogLevel == 'error' && (level == 'debug' || level == 'info'  || level == 'warning' )) {
+        result = false;
+    }
+    return result;
+}
+
 class Log {
     tag:string;
     constructor(tag:string) {
@@ -15,7 +33,7 @@ class Log {
     }
     private log(level:string, message:string):void {
         let console = window['console'];
-        if (!console) {
+        if (!console || !doLog(level)) {
             return;
         }
         let msg = this.tag + " ## " + message;
