@@ -11,8 +11,9 @@
   },
   "scripts": {
     "start": "http-server",
-    "postinstall": "grunt copy:libs",
+    "postinstall": "grunt postInstall",
     "build": "grunt",
+    "buildAndroid" : "grunt buildAndroid",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

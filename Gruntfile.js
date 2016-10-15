@@ -1,5 +1,7 @@
 module.exports = function (grunt) {
 
+    var cvPath = "cordovaApp/";
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
@@ -21,13 +23,13 @@ module.exports = function (grunt) {
                 expand: true,
                 cwd: 'app',
                 src: '**',
-                dest: 'nomisApp/www/'
+                dest: cvPath + 'www/'
             },
             cvConfig : {
                 cwd: 'cordova',
                 expand: true,
                 src: '**',
-                dest: 'nomisApp/'
+                dest: cvPath
             }
         },
         less: {
@@ -44,14 +46,14 @@ module.exports = function (grunt) {
         },
         exec: {
             initCordova : {
-                cmd : 'cordova create nomisApp && cd nomisApp && cordova platform add android'
+                cmd : 'cordova create ' + cvPath + ' && cd ' + cvPath + ' && cordova platform add android'
             },
             buildAndroid : {
-                cwd : 'nomisApp',
+                cwd : cvPath,
                 cmd : 'cordova build android --release --buildConfig=../cordova/build.json',
             },
             runAndroid : {
-                cwd : 'nomisApp',
+                cwd : cvPath,
                 cmd : 'cordova run android',
             },
             compileTsx : {
@@ -66,8 +68,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('default', ['less:prod', 'exec:compileTsx']);
+
+    grunt.registerTask('postInstall', ['copy:libs', 'exec:initCordova']);
     grunt.registerTask('cordova', ['less:prod', 'copy:cvApp', 'copy:cvConfig' ]);
     grunt.registerTask('android', ['cordova', 'exec:runAndroid' ]);
-    grunt.registerTask('androidBuild', ['cordova', 'exec:buildAndroid' ]);
+    grunt.registerTask('buildAndroid', ['cordova', 'exec:buildAndroid' ]);
 
 };
