@@ -10,7 +10,7 @@
     ]
   },
   "scripts": {
-    "start": "http-server",
+    "start": "http-server -o",
     "postinstall": "grunt postInstall",
     "build": "grunt",
     "buildAndroid" : "grunt buildAndroid",

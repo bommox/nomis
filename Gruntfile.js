@@ -69,7 +69,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', ['less:prod', 'exec:compileTsx']);
 
-    grunt.registerTask('postInstall', ['copy:libs', 'exec:initCordova']);
+    grunt.registerTask('postInstall', ['copy:libs', 'exec:initCordova', 'default']);
     grunt.registerTask('cordova', ['less:prod', 'copy:cvApp', 'copy:cvConfig' ]);
     grunt.registerTask('android', ['cordova', 'exec:runAndroid' ]);
     grunt.registerTask('buildAndroid', ['cordova', 'exec:buildAndroid' ]);
