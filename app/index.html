@@ -6,21 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>Nomis Game</title>
     
-    <script src="lib/react/react.js"></script>
-    <script src="lib/react/react-dom.js"></script>
+    <script src="lib/react.js"></script>
+    <script src="lib/react-dom.js"></script>
 
     
-    <link rel="stylesheet" href="../node_modules/normalize.css/normalize.css" />
+    <link rel="stylesheet" href="lib/normalize.css" />
+    <!--
     <link rel="stylesheet/less" type="text/css" href="less/main.less" />
-
+    <script src="../node_modules/less/dist/less.js"></script>    
+    -->
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
 </head>
 <body class="flex-col">
 
     <div id="AppContainer" class="flex-1 flex-col"></div>
     
-    <script src="../node_modules/less/dist/less.js"></script>    
-    <script src="../node_modules/jquery/dist/jquery.js"></script>
-    <script src="../node_modules/howler/dist/howler.js"></script>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/howler.js"></script>
 
     <script src="app-bundle-ts.js"></script>
 

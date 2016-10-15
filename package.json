@@ -12,7 +12,7 @@
   "scripts": {
     "start": "http-server",
     "postinstall": "grunt copy:libs",
-    "build": "browserify --debug app/src/app.tsx -p [ tsify ] -o  app/app-bundle-ts.js",
+    "build": "grunt",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -31,17 +31,13 @@
     "babelify": "^7.3.0",
     "grunt": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-less": "^1.4.0",
+    "grunt-exec": "^1.0.1",
     "howler": "^2.0.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
-    "rxjs": "^5.0.0-rc.1",
-    "rxjs-es": "^5.0.0-beta.12"
-  },
-  "devDependencies": {
-    "@reactivex/rxjs": "^5.0.0-rc.1",
     "babel-cli": "^6.16.0",
     "babel-preset-latest": "^6.16.0",
-    "babel-preset-react": "^6.16.0",
-    "grunt-babel": "^6.0.0"
+    "babel-preset-react": "^6.16.0"
   }
 }
