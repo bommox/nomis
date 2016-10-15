@@ -27,13 +27,13 @@ let loadSound = function(name) {
 };
 ////////////////////// Button behaviour
 let pressButton = function(node) : boolean {
-    if (node && node.className.indexOf("pressed") == -1 ) {
-        var origClass = node.className;
-        node.className = origClass + " pressed";
-        setTimeout(() => node.className = origClass, 150);
+    if (node) {
+        let $node = $(node);
+        clearTimeout($node.data('to'));
+        $node.addClass('pressed');
+        $node.data('to', setTimeout(() => $node.removeClass('pressed'), 150));
         return true;
     } else {
-        Log.logRoot.w('Button already pressed');
         return false;
     }
 };
@@ -41,8 +41,8 @@ let pressButton = function(node) : boolean {
 let GAME_SOUNDS = {};
 GAME_SOUNDS[PANEL_COLOR.GREEN] = loadSound("C");
 GAME_SOUNDS[PANEL_COLOR.RED] = loadSound("D");
-GAME_SOUNDS[PANEL_COLOR.YELLOW] = loadSound("E");
-GAME_SOUNDS[PANEL_COLOR.BLUE] = loadSound("F");
+GAME_SOUNDS[PANEL_COLOR.BLUE] = loadSound("E");
+GAME_SOUNDS[PANEL_COLOR.YELLOW] = loadSound("F");
 
 export interface IBoardState {
     started?:boolean,
@@ -83,7 +83,9 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         }
     }
     
-    handleUserClick(btnId:string) {
+    handleUserClick(btnId:string, event:React.SyntheticEvent) {
+        event.stopPropagation();
+        event.preventDefault();
         if (btnId == 'center') {
             pressButton(this.btns[btnId]);
             this.log.d("handleUserClick:Button center pressed!");
@@ -153,7 +155,8 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
                     className={"board-btn board-btn-" + position} 
                     data-color={color}
                     ref={(c) => _this.btns[color] = c} 
-                    onClick={_this.handleUserClick.bind(_this, color)}>
+                    onClick={_this.handleUserClick.bind(_this, color)} 
+                    onTouchStart={_this.handleUserClick.bind(_this, color)}>
             </span>
         );
         return (
