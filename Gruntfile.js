@@ -15,6 +15,9 @@ module.exports = function (grunt) {
                             'node_modules/react-dom/dist/react-dom.min.js',
                             'node_modules/normalize.css/normalize.css',
                             'node_modules/jquery/dist/jquery.js',
+                            'node_modules/blast-text/jquery.blast.min.js',
+                            'node_modules/velocity-animate/velocity.min.js',
+                            'node_modules/velocity-animate/velocity.ui.min.js',
                             'node_modules/howler/dist/howler.js']
                     }
                 ]

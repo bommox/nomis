@@ -56,6 +56,7 @@ const USER_DATA_RECORDS = 'UserDataRecords';
 export class App extends React.Component<IAppProps, IAppState> {
 
     log:Log.ILog;
+    nodes:any;
 
     constructor() {
         super();
@@ -65,6 +66,9 @@ export class App extends React.Component<IAppProps, IAppState> {
         this.handleOnGameOver = this.handleOnGameOver.bind(this);
         this.handleOnTurnOk = this.handleOnTurnOk.bind(this);
         this.saveData = this.saveData.bind(this);
+        this.uiShakeTitle = this.uiShakeTitle.bind(this);
+
+        this.nodes = {};
 
         let userRecords = Storage.get(USER_DATA_RECORDS, {
             'easy' : {record:0},
@@ -79,6 +83,26 @@ export class App extends React.Component<IAppProps, IAppState> {
           score: 0,
           gameStarted: false
         }
+    }
+
+    uiShakeTitle() {
+      let HeaderTitleBlast = $(".title")['blast']({delimiter:"character"});
+      HeaderTitleBlast.velocity("callout.bounce",{
+          delay:1500, stagger: 100, display:"inline-block"
+      });
+    }
+
+    componentDidMount() {
+      this.log.d('componentDidMount');
+      $(this.nodes['header']).css('transform','translateY(-100%)');
+      $(this.nodes['board']).css('transform','translateY(100%)');
+
+
+      setTimeout((() => {
+        $['Velocity'](this.nodes['header'], { translateY: [0, "-100%"] }, { easing:'spring', duration:1200});      
+        $['Velocity'](this.nodes['board'],  { translateY: [0,'100%'] }, { easing:'spring', duration:1200});
+        this.uiShakeTitle();
+      }).bind(this),200);
     }
 
 
@@ -116,6 +140,7 @@ export class App extends React.Component<IAppProps, IAppState> {
             gameStarted : false
           });
       }
+      this.uiShakeTitle();
     }
 
     handleOnTurnOk() {
@@ -141,7 +166,7 @@ export class App extends React.Component<IAppProps, IAppState> {
         let hasRecord = (this.state.gameStarted && this.state.score > currentLevelRecord);
         return (
            <div className="flex-1 flex-col">
-              <div className="header">
+              <div className="header" ref={(c) => this.nodes['header']  = c}>
                   <div className="header-container">
                       <div className="title">Simon Says</div>
                       <div className="separator-big"></div>
@@ -167,7 +192,9 @@ export class App extends React.Component<IAppProps, IAppState> {
                   </div>
               </div>
               <div className="flex-2"></div>
-              <Board speed={boardSpeed} onGameStart={this.handleOnGameStart} onGameOver={this.handleOnGameOver} onTurnOk={this.handleOnTurnOk} />
+              <div ref={(c) => this.nodes['board']  = c} >
+                <Board speed={boardSpeed} onGameStart={this.handleOnGameStart} onGameOver={this.handleOnGameOver} onTurnOk={this.handleOnTurnOk} />
+              </div>
               <div className="flex-1"></div>
           </div>
         );

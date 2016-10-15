@@ -13,7 +13,7 @@
     "start": "http-server -o",
     "postinstall": "grunt postInstall",
     "build": "grunt",
-    "buildAndroid" : "grunt buildAndroid",
+    "buildAndroid": "grunt buildAndroid",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,8 +28,11 @@
   },
   "homepage": "https://github.com/bommox/nomis#readme",
   "dependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "babelify": "^7.3.0",
+    "blast-text": "julianshapiro/blast",
     "grunt": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-less": "^1.4.0",
@@ -37,8 +40,6 @@
     "howler": "^2.0.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
-    "babel-cli": "^6.16.0",
-    "babel-preset-latest": "^6.16.0",
-    "babel-preset-react": "^6.16.0"
+    "velocity-animate": "julianshapiro/velocity"
   }
 }
